@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ChevronDown, Check, X } from "lucide-react";
+import { ChevronDown, Check, X, ArrowRight } from "lucide-react";
 import { showToast } from "@/components/GlobalToast";
 
 function MyPlanContent() {
@@ -219,18 +219,32 @@ function MyPlanContent() {
 
                 {/* Buttons Section */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-1 sm:pt-0 border-t sm:border-0 border-slate-800/60">
-                  <button
-                    onClick={() => handleMarkAsDone(id)}
-                    disabled={workout.completed}
-                    className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all active:scale-95 ${
-                      workout.completed
-                        ? "bg-[#ccff00] text-black opacity-90 cursor-not-allowed"
-                        : "bg-slate-800 hover:bg-slate-700 text-slate-200 cursor-pointer"
-                    }`}
+                  {/* View Details Button */}
+                  <Link
+                    href={`/workouts/${id}`}
+                    className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-extrabold transition-all active:scale-95 cursor-pointer"
                   >
-                    <Check className="w-4 h-4 shrink-0" />
-                    <span>{workout.completed ? "Done" : "Mark as Done"}</span>
-                  </button>
+                    <span>View Details</span>
+                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                  </Link>
+
+                  {/* Mark as Done Button (Only for Today's Plan) */}
+                  {activeTab !== "saved" && (
+                    <button
+                      onClick={() => handleMarkAsDone(id)}
+                      disabled={workout.completed}
+                      className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all active:scale-95 ${
+                        workout.completed
+                          ? "bg-[#ccff00] text-black opacity-90 cursor-not-allowed"
+                          : "bg-slate-800 hover:bg-slate-700 text-slate-200 cursor-pointer"
+                      }`}
+                    >
+                      <Check className="w-4 h-4 shrink-0" />
+                      <span>{workout.completed ? "Done" : "Mark as Done"}</span>
+                    </button>
+                  )}
+
+                  {/* Remove Button */}
                   <button
                     onClick={() => handleRemove(id)}
                     className="p-2 bg-slate-800/80 hover:bg-red-500/20 hover:text-red-400 text-slate-400 rounded-xl transition-all cursor-pointer shrink-0 active:scale-95"
@@ -244,7 +258,6 @@ function MyPlanContent() {
           })}
         </div>
       ) : (
-        /* Empty State */
         <div className="bg-[#151821]/40 border border-dashed border-slate-800/80 rounded-3xl p-8 sm:p-16 text-center flex flex-col items-center justify-center space-y-4 min-h-[280px] sm:min-h-[320px]">
           <h2 className="text-base sm:text-xl font-black text-white uppercase tracking-wider">NOTHING HERE YET</h2>
           <p className="text-slate-400 text-xs sm:text-sm font-medium max-w-sm">
